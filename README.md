@@ -1,7 +1,23 @@
-Need NodeJS install in system
+Requrement
+- Need NodeJS install in system
 
-To start 
-on terminal run `node delivery-cost.js`
-after each input line use enter key
+Step 1 - install deps
+```
+npm i
+```
 
-To execute `Ctrl + c`
+Step 2 - to run
+```
+npm run start
+```
+- After each input line use enter key
+
+Step 3 - to execute
+```
+Ctrl + c
+```
+
+To run test cases
+```
+npm run test
+```
