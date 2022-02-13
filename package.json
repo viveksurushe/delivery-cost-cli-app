@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node delivery-cost.js",
+    "start:cost": "node delivery-cost.js",
+    "start:time": "node delivery-time-estimation.js",
     "test": "mocha"
   },
   "keywords": [],
