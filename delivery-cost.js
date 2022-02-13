@@ -18,7 +18,12 @@ ReadLine.on("line", function (cmd) {
   }
 });
 
-function discountCal(offer_code, pkg_weight, distance) {
+function discountCal(deliveryCost, offer_code, pkg_weight, distance) {
+
+  if(!offer_code.trim()) {
+    return 0;
+  }
+
   // Offers data
   const OFFERS = [
     {
@@ -55,9 +60,10 @@ function discountCal(offer_code, pkg_weight, distance) {
       isConditionValid.distance = true;
     }
 
-    // if both condition satifies then return discount percentage
+    // if both condition satifies then return discount
     if (isConditionValid.weight && isConditionValid.distance) {
-      return offer.disPer;
+      const discountAmount = (deliveryCost * offer.disPer) / 100;
+      return discountAmount;
     }
     return 0;
   } else {
@@ -73,15 +79,18 @@ ReadLine.on("close", async function (cmd) {
   console.log("Result:");
   if (inputs.length > 0) {
     const [base_delivery_cost, no_of_packges] = inputs[0].split(" ");
+
     if (inputs.length - 1 !== Number(no_of_packges)) {
       console.log(
         `Oops!, Please enter all packages details, Total ${no_of_packges} packages required`
       );
       process.exit(0);
     }
+    
     const packages = inputs.slice(1, inputs.length);
     let output = [];
     for await (let pkg of packages) {
+
       // filter added to trim empty space in between
       const [pkg_id, pkg_weight, distance, offer_code] = pkg
         .split(" ")
@@ -90,7 +99,7 @@ ReadLine.on("close", async function (cmd) {
       if (!pkg_weight.trim() || !distance.trim()) {
         return `${pkg_id} Weight or Distance not available for package`;
       } else {
-        let discountPercentage = 0;
+
         // calculate delivery cost fun
         const deliveryCost = deliveryCostCal(
           Number(base_delivery_cost),
@@ -98,19 +107,15 @@ ReadLine.on("close", async function (cmd) {
           Number(distance)
         );
 
-        if (offer_code.trim()) {
-          // calculate discount
-          discountPercentage = discountCal(offer_code, pkg_weight, distance);
-        }
+        // calculate discount
+        const discount  = discountCal(deliveryCost, offer_code, pkg_weight, distance);
+        console.log('discount', discount);
 
-        if (discountPercentage > 0) {
-          const discountAmount = (deliveryCost * discountPercentage) / 100;
-          const finalCost = deliveryCost - discountAmount;
-          output.push(`${pkg_id}  ${distance}  ${finalCost}\n`);
-        } else {
-          output.push(`${pkg_id}  ${distance}  ${deliveryCost}\n`);
-        }
+        const finalCost = deliveryCost - discount;
+        console.log('finalCost', finalCost);
+        output.push(`${pkg_id}  ${distance}  ${finalCost}\n`);
       }
+
     }
     console.log(output.join(""));
   } else {
@@ -118,3 +123,8 @@ ReadLine.on("close", async function (cmd) {
   }
   process.exit(0);
 });
+
+module.exports = {
+  discountCal,
+  deliveryCostCal
+}
