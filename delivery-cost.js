@@ -71,12 +71,7 @@ function discountCal(deliveryCost, offer_code, pkg_weight, distance) {
   }
 }
 
-function deliveryCostCal(base_delivery_cost, package_weight, distance) {
-  return base_delivery_cost + package_weight * 10 + distance * 5;
-}
-
-ReadLine.on("close", async function (cmd) {
-  console.log("Result:");
+async function deliveryCost(inputs) {
   if (inputs.length > 0) {
     const [base_delivery_cost, no_of_packges] = inputs[0].split(" ");
 
@@ -101,30 +96,32 @@ ReadLine.on("close", async function (cmd) {
       } else {
 
         // calculate delivery cost fun
-        const deliveryCost = deliveryCostCal(
-          Number(base_delivery_cost),
-          Number(pkg_weight),
-          Number(distance)
-        );
+        const deliveryCost = Number(base_delivery_cost) + Number(pkg_weight) * 10 + Number(distance) * 5;
 
         // calculate discount
         const discount  = discountCal(deliveryCost, offer_code, pkg_weight, distance);
-        console.log('discount', discount);
 
         const finalCost = deliveryCost - discount;
-        console.log('finalCost', finalCost);
-        output.push(`${pkg_id}  ${distance}  ${finalCost}\n`);
+        output.push([pkg_id, distance, finalCost, '\n']);
       }
 
     }
-    console.log(output.join(""));
+    return output;
   } else {
     console.log("Oops!, Please enter valid inputs");
   }
+}
+
+// `${pkg_id}  ${distance}  ${finalCost}\n`
+ReadLine.on("close", async function (cmd) {
+  console.log("\nResult:");
+  const result = await deliveryCost(inputs);
+  const renderResult = result.map((e) => e.join(' ')).join('');
+  console.log(renderResult);
   process.exit(0);
 });
 
 module.exports = {
   discountCal,
-  deliveryCostCal
+  deliveryCost
 }
