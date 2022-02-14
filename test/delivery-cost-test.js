@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { deliveryCost, discountCal } = require('../delivery-cost');
+const { deliveryCost, discountCal } = require('../modules/shared');
 
 describe('Delivery Cost', function () {
 

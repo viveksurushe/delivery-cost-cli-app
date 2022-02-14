@@ -51,7 +51,6 @@ function discountCal(deliveryCost, offer_code, pkg_weight, distance) {
 }
 
 async function deliveryCost(inputs, isWeightReq = false) {
-  console.log("inputs", inputs);
   if (inputs.length > 0) {
     const [base_delivery_cost, no_of_packges] = inputs[0].split(" ");
 
@@ -102,4 +101,5 @@ async function deliveryCost(inputs, isWeightReq = false) {
 
 module.exports = {
   deliveryCost,
+  discountCal
 };

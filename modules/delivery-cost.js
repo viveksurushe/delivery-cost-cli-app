@@ -20,9 +20,11 @@ ReadLine.on("line", function (cmd) {
 });
 
 ReadLine.on("close", async function (cmd) {
-  console.log("\nResult: #1");
+  console.log("\nResult:");
   const result = await deliveryCost(inputs);
-  const renderResult = result.map((e) => e.join(' ')).join('');
-  console.log(renderResult);
+  if(result){
+    const renderResult = result.map((e) => e.join(' ')).join('');
+    console.log(renderResult);
+  }
   process.exit(0);
 });
